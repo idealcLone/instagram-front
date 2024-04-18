@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Sidebar from "@/components/common/Sidebar";
+import { cls } from "@/utils/common";
+import { ToastContainer } from "react-toastify";
+
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +21,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={cls(inter.className, "flex gap-4")}>
+        <Sidebar />
+        <main className={"flex-1"}>{children}</main>
+        <ToastContainer position={"bottom-left"} />
+      </body>
     </html>
   );
 }
