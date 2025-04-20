@@ -64,3 +64,10 @@ jobs:
             docker stop instagram-frontend || true
             docker rm instagram-frontend || true
             docker run -d --name instagram-frontend -p 3000:3000 --env-file /root/.env ${{ env.IMAGE_NAME }}:latest
+
+      - name: Set up Kubeconfig
+        run: doctl kubernetes cluster kubeconfig save my-cluster
+
+      - name: Apply manifests
+        run: |
+          kubectl apply -f k8s/frontend-deployment.yaml
