@@ -18,7 +18,7 @@ export const verifyOAuthToken = async (token: string) => {
     const { token: jwtToken, user } = response;
 
     cookies().set("token", jwtToken, {
-      expires: new Date(Date.now() + 1000 * 60 * 60),
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     });
 
     return user;
