@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     env:
@@ -34,3 +34,33 @@ jobs:
           build-args: |
             BACKEND_URL=${{ secrets.BACKEND_URL }}
             NEXT_SHARP_PATH=${{ secrets.NEXT_SHARP_PATH }}
+
+      - name: Create .env file
+        run: |
+          cat <<EOF > .env
+          NEXT_PUBLIC_BACKEND_URL=${{ secrets.BACKEND_URL }}
+          NEXT_SHARP_PATH=${{ secrets.NEXT_SHARP_PATH }}
+          EOF
+
+      - name: Upload .env to Droplet
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          password: ${{ secrets.DROPLET_PASSWORD }}
+          port: 22
+          source: ".env"
+          target: "/root/"
+
+      - name: Deploy to DigitalOcean Droplet via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          password: ${{ secrets.DROPLET_PASSWORD }}
+          port: 22
+          script: |
+            docker pull ${{ env.IMAGE_NAME }}:latest
+            docker stop instagram-frontend || true
+            docker rm instagram-frontend || true
+            docker run -d --name instagram-frontend -p 3000:3000 --env-file /root/.env ${{ env.IMAGE_NAME }}:latest
