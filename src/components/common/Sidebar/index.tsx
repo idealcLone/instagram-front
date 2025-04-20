@@ -3,7 +3,7 @@ import Link from "next/link";
 const Sidebar = () => {
   const links = [
     {
-      name: "Homee",
+      name: "Home",
       url: "/",
     },
     {
