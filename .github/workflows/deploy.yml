@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: idealcLone/instagram-frontend
+      IMAGE_NAME: idealclone/instagram-frontend
 
     steps:
       - name: Checkout code
