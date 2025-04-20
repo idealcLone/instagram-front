@@ -1,8 +1,6 @@
-
-# Step 1: Install dependencies and build the app
+# --- Step 1: Build the app ---
 FROM node:20-alpine AS builder
 
-# Add at the top of the Dockerfile
 ARG BACKEND_URL
 ARG NEXT_SHARP_PATH
 
@@ -11,27 +9,33 @@ ENV NEXT_SHARP_PATH=$NEXT_SHARP_PATH
 
 WORKDIR /app
 
-# Install dependencies
+# Copy only dependency manifests first (for layer caching)
 COPY package*.json ./
-RUN npm install --production
 
-# Copy source and build
+# Install only production dependencies
+RUN npm install --omit=dev
+
+# Copy source code
 COPY . .
+
+# Build the Next.js app
 RUN npm run build
 
-# Step 2: Use a lightweight runtime image
+
+# --- Step 2: Create lightweight runtime image ---
 FROM node:20-alpine
 
+ENV NODE_ENV=production
 WORKDIR /app
 
-# Copy only the built output and production deps
-COPY --from=builder /app ./
+# Copy only what's needed from builder
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
-# Expose Next.js default port
+# Expose the default Next.js port
 EXPOSE 3000
 
-# Set env to production
-ENV NODE_ENV=production
-
-# Start Next.js
+# Start Next.js server
 CMD ["npm", "start"]
