@@ -1,12 +1,13 @@
+
+# Step 1: Install dependencies and build the app
+FROM node:20-alpine AS builder
+
 # Add at the top of the Dockerfile
 ARG BACKEND_URL
 ARG NEXT_SHARP_PATH
 
 ENV NEXT_PUBLIC_BACKEND_URL=$BACKEND_URL
 ENV NEXT_SHARP_PATH=$NEXT_SHARP_PATH
-
-# Step 1: Install dependencies and build the app
-FROM node:20-alpine AS builder
 
 WORKDIR /app
 
