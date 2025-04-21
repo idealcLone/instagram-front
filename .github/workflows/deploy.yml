@@ -42,41 +42,13 @@ jobs:
           NEXT_SHARP_PATH=${{ secrets.NEXT_SHARP_PATH }}
           EOF
 
-      - name: Upload .env to Droplet
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.DROPLET_HOST }}
-          username: ${{ secrets.DROPLET_USER }}
-          password: ${{ secrets.DROPLET_PASSWORD }}
-          port: 22
-          source: ".env"
-          target: "/root/"
-
-      - name: Deploy to DigitalOcean Droplet via SSH
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.DROPLET_HOST }}
-          username: ${{ secrets.DROPLET_USER }}
-          password: ${{ secrets.DROPLET_PASSWORD }}
-          port: 22
-          script: |
-            docker pull ${{ env.IMAGE_NAME }}:latest
-            docker stop instagram-frontend || true
-            docker rm instagram-frontend || true
-            docker run -d --name instagram-frontend -p 3000:3000 --env-file /root/.env ${{ env.IMAGE_NAME }}:latest
-
       - name: Install doctl
-        run: |
-          curl -sL https://github.com/digitalocean/doctl/releases/download/v1.105.0/doctl-1.105.0-linux-amd64.tar.gz -o doctl.tar.gz
-          tar -xzf doctl.tar.gz
-          sudo mv doctl /usr/local/bin
-
-      - name: Authenticate doctl
-        run: doctl auth init --access-token ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
       - name: Set up Kubeconfig
         run: doctl kubernetes cluster kubeconfig save e204b213-4401-40bb-8ab4-2fc9f63fdcaf
 
-      - name: Apply manifests
-        run: |
-          kubectl apply -f frontend-deployment.yaml
+      - name: Apply frontend deployment to K8s
+        run: kubectl apply -f k8s/frontend-deployment.yaml
