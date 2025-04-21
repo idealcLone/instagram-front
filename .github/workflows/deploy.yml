@@ -10,6 +10,7 @@ jobs:
 
     env:
       IMAGE_NAME: idealclone/instagram-frontend
+      IMAGE_TAG: ${{ github.sha }}
 
     steps:
       - name: Checkout code
@@ -30,7 +31,9 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ env.IMAGE_NAME }}:latest
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           build-args: |
             BACKEND_URL=${{ secrets.BACKEND_URL }}
             NEXT_SHARP_PATH=${{ secrets.NEXT_SHARP_PATH }}
@@ -50,5 +53,8 @@ jobs:
       - name: Set up Kubeconfig
         run: doctl kubernetes cluster kubeconfig save e204b213-4401-40bb-8ab4-2fc9f63fdcaf
 
-      - name: Apply frontend deployment to K8s
-        run: kubectl apply -f frontend-deployment.yaml
+      - name: Apply frontend deployment and update image
+        run: |
+          kubectl apply -f frontend-deployment.yaml
+          kubectl set image deployment/instagram-frontend frontend=idealclone/instagram-frontend:${{ github.sha }}
+          kubectl rollout status deployment/instagram-frontend
