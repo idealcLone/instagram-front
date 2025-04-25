@@ -40,7 +40,8 @@ const Sidebar = () => {
       console.log("status", data);
 
       setBackendStatus(data || "OK");
-    } catch {
+    } catch (error) {
+      console.log(error);
       setBackendStatus("DEAD");
     }
   };
