@@ -1,28 +1,46 @@
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { authorizedFetch } from "@/actions";
+
+const links = [
+  {
+    name: "Home",
+    url: "/",
+  },
+  {
+    name: "Explore",
+    url: "/explore",
+  },
+  {
+    name: "Messages",
+    url: "/messages",
+  },
+  {
+    name: "Create",
+    url: "/create",
+  },
+  {
+    name: "Profile",
+    url: "/profile",
+  },
+];
 
 const Sidebar = () => {
-  const links = [
-    {
-      name: "Homee",
-      url: "/",
-    },
-    {
-      name: "Explore",
-      url: "/explore",
-    },
-    {
-      name: "Messages",
-      url: "/messages",
-    },
-    {
-      name: "Create",
-      url: "/create",
-    },
-    {
-      name: "Profile",
-      url: "/profile",
-    },
-  ];
+  const [backendStatus, setBackendStatus] = useState<string>("");
+
+  const getBackendStatus = async () => {
+    try {
+      const data = await authorizedFetch("/health-check");
+
+      setBackendStatus(data);
+    } catch {
+      setBackendStatus("DEAD");
+    }
+  };
+
+  useEffect(() => {
+    getBackendStatus();
+  }, []);
 
   return (
     <aside
@@ -35,6 +53,10 @@ const Sidebar = () => {
           <Link href={"/"} className={"block p-4 text-xl font-semibold"}>
             Instagram
           </Link>
+        </li>
+        <li>
+          <div>Backend Health Check: </div>
+          <div>{backendStatus}</div>
         </li>
         {links.map((link) => (
           <li key={link.url}>
