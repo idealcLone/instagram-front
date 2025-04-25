@@ -57,7 +57,7 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <div>Backend Health Check: </div>
+          <div>Backend: </div>
           <div>{backendStatus}</div>
         </li>
         {links.map((link) => (
