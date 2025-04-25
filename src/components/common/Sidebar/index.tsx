@@ -32,7 +32,7 @@ const Sidebar = () => {
   const getBackendStatus = async () => {
     try {
       const response = await fetch(
-        `${process.env.BACKEND_URL}/api/health-check`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/health-check`
       );
       const data = await response.json();
 

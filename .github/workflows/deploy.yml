@@ -36,6 +36,7 @@ jobs:
             ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           build-args: |
             BACKEND_URL=${{ secrets.BACKEND_URL }}
+            NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
             NEXT_SHARP_PATH=${{ secrets.NEXT_SHARP_PATH }}
 
       - name: Install doctl
@@ -51,6 +52,7 @@ jobs:
           kubectl delete secret frontend-secrets --ignore-not-found
           kubectl create secret generic frontend-secrets \
             --from-literal=BACKEND_URL=${{ secrets.BACKEND_URL }} \
+            --from-literal=NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }} \
             --from-literal=NEXT_SHARP_PATH=${{ secrets.NEXT_SHARP_PATH }}
 
       - name: Apply frontend deployment and update image
