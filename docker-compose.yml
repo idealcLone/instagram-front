@@ -1,10 +1,15 @@
-# instagram-frontend/docker-compose.yml
 version: '3.8'
 
 services:
   instagram-frontend:
     build:
       context: .
+      dockerfile: Dockerfile
+      args:
+        BACKEND_URL: ${BACKEND_URL}
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
+        NEXT_SHARP_PATH: ${NEXT_SHARP_PATH}
+    image: idealclone/instagram-frontend:${IMAGE_TAG:-dev}
     container_name: instagram-frontend
     env_file:
       - .env
