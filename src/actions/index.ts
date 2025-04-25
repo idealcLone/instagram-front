@@ -22,6 +22,8 @@ export async function authorizedFetch(
       ...init,
     });
 
+    console.log("Response", url, response);
+
     if (response.status.toString().startsWith("2")) {
       return await response.json();
     }
