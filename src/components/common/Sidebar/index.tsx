@@ -34,7 +34,9 @@ const Sidebar = () => {
     try {
       const data = await authorizedFetch("/health-check");
 
-      setBackendStatus(data);
+      console.log("status:", data);
+
+      setBackendStatus(data || "OK");
     } catch {
       setBackendStatus("DEAD");
     }
