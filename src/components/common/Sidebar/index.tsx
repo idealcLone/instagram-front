@@ -36,9 +36,6 @@ const Sidebar = () => {
       );
       const data = await response.text();
 
-      console.log("response", response);
-      console.log("status", data);
-
       setBackendStatus(data || "OK");
     } catch (error) {
       console.log(error);
@@ -62,9 +59,9 @@ const Sidebar = () => {
             Instagram
           </Link>
         </li>
-        <li className={"block p-4 hover:bg-neutral-800 rounded-md"}>
+        <li className={"flex p-4 hover:bg-neutral-800 rounded-md"}>
           <div>Status: </div>
-          <div>{backendStatus}</div>
+          <div className={"underline underline-offset-2"}>{backendStatus}</div>
         </li>
         {links.map((link) => (
           <li key={link.url}>
