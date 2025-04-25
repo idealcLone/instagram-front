@@ -59,9 +59,9 @@ const Sidebar = () => {
             Instagram
           </Link>
         </li>
-        <li className={"flex p-4 hover:bg-neutral-800 rounded-md"}>
-          <div>Status: </div>
-          <div className={"underline underline-offset-2"}>{backendStatus}</div>
+        <li className={"flex gap-1 p-4 hover:bg-neutral-800 rounded-md"}>
+          <div>Status:</div>
+          <div className={"font-semibold"}>{backendStatus}</div>
         </li>
         {links.map((link) => (
           <li key={link.url}>
