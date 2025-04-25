@@ -38,13 +38,6 @@ jobs:
             BACKEND_URL=${{ secrets.BACKEND_URL }}
             NEXT_SHARP_PATH=${{ secrets.NEXT_SHARP_PATH }}
 
-      - name: Create .env file
-        run: |
-          cat <<EOF > .env
-          NEXT_PUBLIC_BACKEND_URL=${{ secrets.BACKEND_URL }}
-          NEXT_SHARP_PATH=${{ secrets.NEXT_SHARP_PATH }}
-          EOF
-
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -52,6 +45,13 @@ jobs:
 
       - name: Set up Kubeconfig
         run: doctl kubernetes cluster kubeconfig save e204b213-4401-40bb-8ab4-2fc9f63fdcaf
+
+      - name: Create frontend-secrets in Kubernetes
+        run: |
+          kubectl delete secret frontend-secrets --ignore-not-found
+          kubectl create secret generic frontend-secrets \
+            --from-literal=BACKEND_URL=${{ secrets.BACKEND_URL }} \
+            --from-literal=NEXT_SHARP_PATH=${{ secrets.NEXT_SHARP_PATH }}
 
       - name: Apply frontend deployment and update image
         run: |
