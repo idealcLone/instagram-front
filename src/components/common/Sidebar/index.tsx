@@ -34,7 +34,7 @@ const Sidebar = () => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/health-check`
       );
-      const data = await response.json();
+      const data = await response.text();
 
       console.log("response", response);
       console.log("status", data);
