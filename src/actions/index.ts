@@ -26,6 +26,8 @@ export async function authorizedFetch(
 
     if (response.status.toString().startsWith("2")) {
       return await response.json();
+    } else {
+      throw new Error("Unable to retrieve the response from the server");
     }
   } catch (error) {
     defaultErrorHandler(JSON.stringify(error));
