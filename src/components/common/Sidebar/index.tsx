@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { authorizedFetch } from "@/actions";
 
 const links = [
   {
@@ -32,9 +31,13 @@ const Sidebar = () => {
 
   const getBackendStatus = async () => {
     try {
-      const data = await authorizedFetch("/health-check");
+      const response = await fetch(
+        `${process.env.BACKEND_URL}/api/health-check`
+      );
+      const data = await response.json();
 
-      console.log("status:", data);
+      console.log("response", response);
+      console.log("status", data);
 
       setBackendStatus(data || "OK");
     } catch {
@@ -58,8 +61,8 @@ const Sidebar = () => {
             Instagram
           </Link>
         </li>
-        <li>
-          <div>Backend: </div>
+        <li className={"block p-4 hover:bg-neutral-800 rounded-md"}>
+          <div>Status: </div>
           <div>{backendStatus}</div>
         </li>
         {links.map((link) => (
