@@ -15,9 +15,3 @@ services:
       - .env
     ports:
       - "3000:3000"
-    networks:
-      - instagram-network
-
-networks:
-  instagram-network:
-    external: true

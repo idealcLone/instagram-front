@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 const links = [
   {
-    name: "Home",
+    name: "Homee",
     url: "/",
   },
   {
